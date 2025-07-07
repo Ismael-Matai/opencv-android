@@ -12,3 +12,26 @@ buildscript {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+plugins {
+    id 'com.android.library'
+    id 'maven-publish'               // ① add this
+}
+
+android {
+    // existing compileSdk/ defaultConfig…
+    publishing { singleVariant("release") }   // ② add this (AGP ≥7)
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release       // ③ publish the AAR
+                groupId    = project.findProperty("GROUP") ?: "com.github.Ismael-Matai"
+                artifactId = "opencv-android"
+                version    = project.findProperty("VERSION") ?: "unspecified"
+            }
+        }
+    }
+}
