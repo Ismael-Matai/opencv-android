@@ -1,33 +1,30 @@
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath "com.android.tools.build:gradle:7.0.2"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21"
-    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-
 plugins {
     id 'com.android.library'
-    id 'maven-publish'               // ① add this
+    id 'kotlin-android'          // ← add this
+    id 'maven-publish'
 }
 
 android {
-    // existing compileSdk/ defaultConfig…
-    publishing { singleVariant("release") }   // ② add this (AGP ≥7)
+    compileSdkVersion 34         // keep whatever the original uses
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 34
+    }
+
+    // AGP 7+ one-liner that tells Gradle which variant to publish
+    publishing {
+        singleVariant("release")
+    }
 }
 
 afterEvaluate {
     publishing {
         publications {
             release(MavenPublication) {
-                from components.release       // ③ publish the AAR
+                from components.release         // publish the AAR
+
+                // JitPack fills GROUP and VERSION; fall back to your ID
                 groupId    = project.findProperty("GROUP") ?: "com.github.Ismael-Matai"
                 artifactId = "opencv-android"
                 version    = project.findProperty("VERSION") ?: "unspecified"
