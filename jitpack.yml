@@ -1,0 +1,4 @@
+# jitpack.yml
+jdk: 11    # or 17
+install:
+  - ./gradlew :app:assembleRelease   # <-- name of the module & task that produces the AAR
