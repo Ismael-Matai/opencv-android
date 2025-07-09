@@ -1,2 +1,5 @@
 jdk:
-  - openjdk11
+  - openjdk17
+before_install:
+  - chmod +x gradlew
+  - ./gradlew wrapper --gradle-version 8.13
